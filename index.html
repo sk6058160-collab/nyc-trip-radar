@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>NYC Trip Radar</title>
+  <meta name="description" content="Which NYC pickup zones give long, medium or short trips right now — from historical TLC trip records plus live public signals." />
+  <meta name="theme-color" content="#05080d" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Trip Radar" />
+  <meta name="format-detection" content="telephone=no" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+</head>
+<body>
+  <header id="top">
+    <div class="brand"><span class="dot"></span>NYC Trip Radar</div>
+    <div class="when">
+      <select id="dow" aria-label="Day of week"></select>
+      <select id="hour" aria-label="Hour"></select>
+      <button id="nowBtn" class="chip" title="Jump to current NYC time">Now</button>
+    </div>
+  </header>
+  <nav class="modes" id="modes">
+    <button data-mode="long" class="mode m-long">Long<small>&gt;10 mi / airport</small></button>
+    <button data-mode="medium" class="mode m-medium">Medium<small>3–10 mi</small></button>
+    <button data-mode="short" class="mode m-short">Short<small>&lt;3 mi</small></button>
+    <button data-mode="volume" class="mode m-volume">Volume<small>trips / hr</small></button>
+  </nav>
+  <div class="svcs" id="svcs">
+    <button data-svc="all">All</button><button data-svc="rideshare">Rideshare</button><button data-svc="yellow">Yellow</button><button data-svc="green">Green</button>
+  </div>
+  <div id="liveBanner" class="banner hidden"></div>
+  <div id="map"></div>
+  <div id="legend" class="legend"></div>
+  <nav class="tabs" id="tabs">
+    <button data-tab="top">Top 10</button><button data-tab="near">Near me</button><button data-tab="live">Live boosts</button><button data-tab="chat">Chat tips</button><button data-tab="more">More</button>
+  </nav>
+  <main id="panel"></main>
+  <div id="sheet" class="sheet hidden" role="dialog" aria-modal="true"><div class="sheet-inner" id="sheetInner"></div></div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

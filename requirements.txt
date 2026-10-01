@@ -1,0 +1,4 @@
+duckdb
+shapely
+pyshp
+pyproj

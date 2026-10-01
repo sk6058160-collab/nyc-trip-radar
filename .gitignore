@@ -1,0 +1,19 @@
+# dependencies / envs
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+
+# build output (built & deployed by GitHub Actions)
+dist/
+
+# large raw TLC / GTFS inputs — regenerate with `npm run data`
+raw/
+*.parquet
+*.zip
+
+# misc
+.DS_Store
+*.log
+.env
+.env.*
