@@ -1,0 +1,40 @@
+name: Build unsigned IPA
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*-ipa']
+permissions:
+  contents: write
+jobs:
+  ipa:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci
+      - run: VITE_BASE=./ npm run build
+      - run: npx cap add ios --packagemanager SPM
+      - name: Patch Info.plist
+        run: |
+          P=ios/App/App/Info.plist
+          /usr/libexec/PlistBuddy -c "Add :NSLocationWhenInUseUsageDescription string 'Trip Radar uses your location to show nearby trip hotspots.'" $P
+          /usr/libexec/PlistBuddy -c "Add :LSApplicationQueriesSchemes array" $P
+          i=0; for s in uber lyft comgooglemaps; do /usr/libexec/PlistBuddy -c "Add :LSApplicationQueriesSchemes:$i string $s" $P; i=$((i+1)); done
+      - run: npx cap sync ios
+      - name: Archive
+        run: |
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release -sdk iphoneos \
+            -destination 'generic/platform=iOS' -archivePath build/App.xcarchive archive \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""
+      - name: Package IPA
+        run: |
+          mkdir -p Payload && cp -R build/App.xcarchive/Products/Applications/App.app Payload/
+          zip -qry TripRadar.ipa Payload && ls -l TripRadar.ipa
+      - uses: actions/upload-artifact@v4
+        with: { name: TripRadar-ipa, path: TripRadar.ipa }
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0-ipa
+          name: Trip Radar v1.0 (unsigned IPA)
+          files: TripRadar.ipa
